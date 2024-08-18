@@ -1,9 +1,6 @@
-// system
 const express = require('express');
 const cors = require('cors');
 const app = express();
-
-
 
 const allowedOrigins = [
   'http://localhost:5173',
@@ -19,7 +16,9 @@ const corsOptions = {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  optionsSuccessStatus: 200,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
 };
 
 app.use(cors(corsOptions));
@@ -40,8 +39,7 @@ const openai = new OpenAIApi(configuration);
 
 app.post('/summarize', async (req, res) => {
   try {
-    const imageBase64 = req.body.image; // Assuming the image is sent as a base64 string
-    // Process the image as needed (e.g., send to a recognition service)
+    const imageBase64 = req.body.image;
     const prompt = `Summarize the content of this image: ${imageBase64}`;
     
     const response = await openai.createCompletion({
